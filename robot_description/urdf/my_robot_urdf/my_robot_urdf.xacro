@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<robot name="box_bot" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+  <xacro:include filename="my_robot_property.xacro" />
+  <xacro:include filename="inertial_script.xacro" />
+  <xacro:include filename="material.xacro" />
+  <xacro:include filename="my_robot_core.xacro"/>
+  <xacro:include filename="gazebo_control.xacro"/>
+  <xacro:include filename="gazebo_depth_camera.xacro"/>
+
+</robot>

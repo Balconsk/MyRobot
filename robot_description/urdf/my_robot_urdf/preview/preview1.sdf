@@ -1,0 +1,257 @@
+<sdf version='1.11'>
+  <world name="preview">
+   <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <plugin
+      filename="gz-sim-physics-system"
+      name="gz::sim::systems::Physics">
+    </plugin>
+    <plugin
+      filename="gz-sim-user-commands-system"
+      name="gz::sim::systems::UserCommands">
+    </plugin>
+    <plugin
+      filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+    <plugin
+      filename="gz-sim-contact-system"
+      name="gz::sim::systems::Contact">
+    </plugin>
+    <plugin
+      filename="ignition-gazebo-sensors-system"
+      name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+   <!-- <model name="depth_camera">
+      <pose>4 0 0.5 0 0.0 3.14</pose>
+      <link name="link">
+        <pose>0.05 0.05 0.05 0 0 0</pose>
+        <inertial>
+          <mass>0.1</mass>
+          <inertia>
+            <ixx>0.000166667</ixx>
+            <iyy>0.000166667</iyy>
+            <izz>0.000166667</izz>
+          </inertia>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+        </visual>
+        <sensor name="depth_camera1" type="depth_camera">
+          <update_rate>10</update_rate>
+          <topic>depth_camera111</topic>
+          <camera>
+            <horizontal_fov>1.05</horizontal_fov>
+            <image>
+              <width>256</width>
+              <height>256</height>
+              <format>R_FLOAT32</format>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>10.0</far>
+            </clip>
+          </camera>
+          </sensor>
+      </link>
+      <static>false</static>
+    </model> -->
+  <model name='box_bot'>
+    <link name='base_link'>
+      <inertial>
+        <pose>0 0 0.14999999999999999 0 0 0</pose>
+        <mass>0.10000000000000001</mass>
+        <inertia>
+          <ixx>0.0015</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0020833333333333329</iyy>
+          <iyz>0</iyz>
+          <izz>0.0020833333333333329</izz>
+        </inertia>
+      </inertial>
+      <collision name='base_link_fixed_joint_lump__chassi_collision'>
+        <pose>0 0 0.14999999999999999 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.40000000000000002 0.29999999999999999 0.29999999999999999</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='base_link_fixed_joint_lump__chassi_visual'>
+        <pose>0 0 0.14999999999999999 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.40000000000000002 0.29999999999999999 0.29999999999999999</size>
+          </box>
+        </geometry>
+        <material>
+          <diffuse>1 0 0 1</diffuse>
+          <ambient>1 0 0 1</ambient>
+        </material>
+      </visual>
+      <sensor name="depth_camera1" type="depth_camera">
+          <update_rate>10</update_rate>
+          <topic>depth_camera111</topic>
+          <camera>
+            <horizontal_fov>1.05</horizontal_fov>
+            <image>
+              <width>256</width>
+              <height>256</height>
+              <format>R_FLOAT32</format>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>10.0</far>
+            </clip>
+          </camera>
+          </sensor>
+    </link>
+    <joint name='join_wheel_left' type='revolute'>
+      <pose relative_to='base_link'>0 0.14999999999999999 0 0 0 0</pose>
+      <parent>base_link</parent>
+      <child>wheel_left</child>
+      <axis>
+        <xyz>0 -1 0</xyz>
+        <limit>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='wheel_left'>
+      <pose relative_to='join_wheel_left'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0 0.014999999999999999 0 0 0 0</pose>
+        <mass>0.10000000000000001</mass>
+        <inertia>
+          <ixx>0.00012999999999999999</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00012999999999999999</iyy>
+          <iyz>0</iyz>
+          <izz>0.00024499999999999999</izz>
+        </inertia>
+      </inertial>
+      <collision name='wheel_left_collision'>
+        <pose>0 0.014999999999999999 0 1.5707963267948959 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.029999999999999999</length>
+            <radius>0.070000000000000007</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='wheel_left_visual'>
+        <pose>0 0.014999999999999999 0 1.5707963267948959 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.029999999999999999</length>
+            <radius>0.070000000000000007</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <diffuse>1 0 0 1</diffuse>
+          <ambient>1 0 0 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='join_wheel_right' type='revolute'>
+      <pose relative_to='base_link'>0 -0.17999999999999999 0 0 0 0</pose>
+      <parent>base_link</parent>
+      <child>wheel_right</child>
+      <axis>
+        <xyz>0 -1 0</xyz>
+        <limit>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='wheel_right'>
+      <pose relative_to='join_wheel_right'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0 0.014999999999999999 0 0 0 0</pose>
+        <mass>0.10000000000000001</mass>
+        <inertia>
+          <ixx>0.00012999999999999999</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00012999999999999999</iyy>
+          <iyz>0</iyz>
+          <izz>0.00024499999999999999</izz>
+        </inertia>
+      </inertial>
+      <collision name='wheel_right_collision'>
+        <pose>0 0.014999999999999999 0 1.5707963267948959 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.029999999999999999</length>
+            <radius>0.070000000000000007</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='wheel_right_visual'>
+        <pose>0 0.014999999999999999 0 1.5707963267948959 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.029999999999999999</length>
+            <radius>0.070000000000000007</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <diffuse>1 0 0 1</diffuse>
+          <ambient>1 0 0 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <plugin name='gz::sim::systems::DiffDrive' filename='gz-sim-diff-drive-system'>
+      <left_joint>join_wheel_left</left_joint>
+      <right_joint>join_wheel_right</right_joint>
+      <wheel_separation>0.3</wheel_separation>
+      <wheel_radius>0.07</wheel_radius>
+      <max_linear_acceleration>10</max_linear_acceleration>
+      <odom_topic>odom</odom_topic>
+      <frame_id>odom</frame_id>
+      <child_frame_id>base_link</child_frame_id>
+      <odom_publisher_frequency>30</odom_publisher_frequency>
+      <tf_topic>/tf</tf_topic>
+      <topic>cmd_vel</topic>
+    </plugin>
+    <plugin name='gz::sim::systems::JointStatePublisher'
+      filename='gz-sim-joint-state-publisher-system'>
+      <topic>joint_states</topic>
+      <joint_name>join_wheel_left</joint_name>
+      <joint_name>join_wheel_right</joint_name>
+    </plugin>
+    <frame name='fixed_join' attached_to='base_link'>
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
+    <frame name='chassi' attached_to='fixed_join'>
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
+  </model>
+  </world>
+</sdf>

@@ -1,0 +1,28 @@
+<robot name="robot_name">
+    <gazebo>
+    <plugin
+      filename="ignition-gazebo-sensors-system"
+      name="gz::sim::systems::Sensors">
+    </plugin>
+  </gazebo>
+
+  <gazebo reference="depth_camera">
+    <sensor name="depth_camera" type="depth_camera">
+      <update_rate>10</update_rate>
+      <topic>depth_camera</topic>
+      <camera>
+        <horizontal_fov>1.05</horizontal_fov>
+        <image>
+          <width>256</width>
+          <height>256</height>
+          <format>R_FLOAT32</format>
+        </image>
+        <clip>
+          <near>0.5</near>
+          <far>10.0</far>
+        </clip>
+      </camera>
+      <gz_frame_id>depth_camera</gz_frame_id>
+    </sensor>
+  </gazebo>
+</robot>

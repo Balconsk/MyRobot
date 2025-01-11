@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+    <!-- This file is not a robot in and of itself, it just contains some useful tags that could be included in any robot -->
+
+    <!-- Specify some colours -->
+
+    <material name="primary">
+        <color rgba="1 0.3 0.1 1"/>
+    </material>
+
+    <material name="secondary">
+        <color rgba="0.7 0.15 0.01 1"/>
+    </material>
+
+    <material name="base">
+        <color rgba="0.1 0.1 0.1 1"/>
+    </material>
+
+</robot>

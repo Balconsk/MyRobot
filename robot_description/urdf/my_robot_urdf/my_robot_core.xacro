@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<robot name="box_bot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="my_robot_property.xacro" />
+  <xacro:include filename="inertial_script.xacro" />
+
+  <link name="base_link"></link>
+
+  <link name="chassi">
+    <xacro:inertial_box mass="1" x="${lenght_robot}" y="${width_robot}" z="${height_robot}">
+      <origin xyz="0.0 0.0 ${height_robot/2}" />
+    </xacro:inertial_box>
+    <visual name="">
+      <origin xyz="0.0 0.0 ${height_robot/2}" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <box size="${lenght_robot} ${width_robot} ${height_robot}" />
+      </geometry>
+      <material name="">
+        <color rgba="1.0 0.0 0.0 1.0" />
+        <texture filename="" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 ${height_robot/2}" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <box size="${lenght_robot} ${width_robot} ${height_robot}" />
+      </geometry>
+    </collision>
+  </link>
+
+
+  <joint name="fixed_join" type="fixed">
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+    <parent link="base_link" />
+    <child link="chassi" />
+  </joint>
+
+
+  <link name="wheel_left">
+    <xacro:inertial_cylinder mass="0.25" radius="${wheel_radius}" length="${wheel_length}">
+      <origin xyz="0.0 ${wheel_length/2} 0.0" />
+    </xacro:inertial_cylinder>
+    <visual name="">
+      <origin xyz="0.0 ${wheel_length/2} 0.0" rpy="${pi/2} 0.0 0.0" />
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}" />
+      </geometry>
+      <material name="">
+        <color rgba="1.0 0.0 0.0 1.0" />
+        <texture filename="" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 ${wheel_length/2} 0.0" rpy="${pi/2} 0.0 0.0" />
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="join_wheel_left" type="continuous">
+    <origin xyz="${wheel_offset_x} ${width_robot/2} 0.0" />
+    <parent link="chassi" />
+    <child link="wheel_left" />
+    <axis xyz="0.0 1 0.0" />
+  </joint>
+
+  <link name="wheel_right">
+    <xacro:inertial_cylinder mass="0.25" radius="${wheel_radius}" length="${wheel_length}">
+      <origin xyz="0.0 ${wheel_length/2} 0.0" />
+    </xacro:inertial_cylinder>
+    <visual name="">
+      <origin xyz="0.0 ${wheel_length/2} 0.0" rpy="${pi/2} 0.0 0.0" />
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}" />
+      </geometry>
+      <material name="">
+        <color rgba="1.0 0.0 0.0 1.0" />
+        <texture filename="" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 ${wheel_length/2} 0.0" rpy="${pi/2} 0.0 0.0" />
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}" />
+      </geometry>
+    </collision>
+  </link>
+
+
+  <joint name="join_wheel_right" type="continuous">
+    <origin xyz="${wheel_offset_x} ${-(width_robot/2 + wheel_length)} 0.0" />
+    <parent link="chassi" />
+    <child link="wheel_right" />
+    <axis xyz="0.0 1 0.0" />
+  </joint>
+
+
+  <!-- ROLING WHEEL -->
+  
+
+  <!-- DEPTH CAMERA -->
+  <link name="base_depth_camera">
+    <xacro:inertial_box mass="0.002" x="0.01" y="0.01" z="0.03">
+      <origin xyz="0.0 0.0 0.015" />
+    </xacro:inertial_box>
+    <visual name="">
+      <origin xyz="0.0 0.0 0.015" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <box size="0.01 0.01 0.03" />
+      </geometry>
+      <material name="">
+        <color rgba="1.0 0.0 0.0 1.0" />
+        <texture filename="" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.015" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <box size="0.01 0.01 0.03" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="base_depth_camera_joint" type="fixed">
+    <origin xyz=" ${(lenght_robot/2)-0.02} 0.0 ${height_robot}" rpy="0.0 0.0 0.0" />
+    <parent link="chassi" />
+    <child link="base_depth_camera" />
+  </joint>
+
+  <link name="depth_camera">
+    <xacro:inertial_box mass="0.01" x="0.06" y="0.24" z="0.04">
+      <origin xyz="0.0 0.0 0.02" rpy="0.0 0.0 0.0" />
+    </xacro:inertial_box>
+    <visual name="">
+      <origin xyz="0.0 0.0 0.02" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <box size="0.06 0.24 0.04" />
+      </geometry>
+      <material name="">
+        <color rgba="1.0 0.0 0.0 1.0" />
+        <texture filename="" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.02" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <box size="0.06 0.24 0.04" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="depth_camera_joint" type="fixed">
+    <origin xyz="0.0 0.0 0.03" rpy="0.0 0.0 0.0" />
+    <parent link="base_depth_camera" />
+    <child link="depth_camera" />
+  </joint>
+
+</robot>
