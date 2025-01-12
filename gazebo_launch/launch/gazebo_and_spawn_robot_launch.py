@@ -98,5 +98,29 @@ def generate_launch_description():
         
     ))
 
+
+    # add pointcloud to laserscan
+    ld.add_action(Node(
+            package='pointcloud_to_laserscan', executable='pointcloud_to_laserscan_node',
+            remappings=[('cloud_in', "points"),
+                        ('scan', ['scanner', '/scan'])],
+            parameters=[{
+                # 'target_frame': 'base_link',
+                # 'transform_tolerance': 0.01,
+                'min_height': 0.0,
+                'max_height': 200.0,
+                'angle_min': -0.5,  # -M_PI/2
+                'angle_max': 0.5,  # M_PI/2
+                'angle_increment': 0.0087,  # M_PI/360.0
+                'scan_time': 1.0,
+                'range_min': 0.45,
+                'range_max': 4.0,
+                'use_inf': True,
+                'inf_epsilon': 1.0,
+                'use_sim_time':True
+            }],
+            name='pointcloud_to_laserscan'
+        ))
+
     return ld
 
