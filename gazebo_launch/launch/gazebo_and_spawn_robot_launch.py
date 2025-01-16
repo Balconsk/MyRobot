@@ -11,73 +11,29 @@ def generate_launch_description():
     
     # Init varibalse
     this_package = "gazebo_launch"
-    path_to_xacro = PathJoinSubstitution(["urdf","my_robot_urdf", "my_robot_urdf.xacro"])
-    xacro_package = "robot_description"
-    
-
     this_package_share = FindPackageShare(this_package)
-    default_rviz_config_path = PathJoinSubstitution([this_package_share, 'config', 'rviz_config.rviz'])
     bridge_params = PathJoinSubstitution([this_package_share, 'config', 'gz_bridge_config.yaml'])
     
+# DELCARE LAUNCH ARGUMENT
     # rviz 
     ld.add_action(DeclareLaunchArgument (name = "rviz", default_value="true", choices=['true','false']))
-    ld.add_action(DeclareLaunchArgument(name = "rviz_config", default_value=default_rviz_config_path, 
+    ld.add_action(DeclareLaunchArgument(name = "rviz_config", default_value=PathJoinSubstitution([this_package_share, 'config', 'rviz_config.rviz']), 
                                         description="Absolut path to rviz config file"))
-
-    ld.add_action(Node(
-        package= "rviz2",
-        executable="rviz2",
-        arguments=["use_sim_time:=true",'-d', LaunchConfiguration('rviz_config')],
-        output = "screen",
-        condition = IfCondition(LaunchConfiguration('rviz'))
-    ))
-
 
     # join state publisher
     ld.add_action(DeclareLaunchArgument(name="jsp", default_value="false", choices=['false','true'], 
                                         description= "Flag to enabel join state publisher gui"))
-    
-    ld.add_action(Node(
-        package="joint_state_publisher_gui",
-        executable="joint_state_publisher_gui",
-        condition = IfCondition(LaunchConfiguration("jsp"))
-    ))
-
 
     # robot state publisher 
     ld.add_action(DeclareLaunchArgument(name="rsp", default_value="true", choices=["true","false"],
                                         description="Flag to enabel robot state publisher"))
 
-    ld.add_action(DeclareLaunchArgument(name = "path_to_urdf", default_value = path_to_xacro))
+    ld.add_action(DeclareLaunchArgument(name = "path_to_urdf", default_value = PathJoinSubstitution(["urdf","my_robot_urdf", "my_robot_urdf.xacro"])))
 
-    ld.add_action(DeclareLaunchArgument(name = "urdf_package", default_value =  xacro_package ))
+    ld.add_action(DeclareLaunchArgument(name = "urdf_package", default_value =  "robot_description" ))
 
-    ld.add_action(IncludeLaunchDescription(
-        PathJoinSubstitution([this_package_share, 'launch', 'robot_state_publisher.launch.py']),
-        launch_arguments={
-            "urdf_package": LaunchConfiguration('urdf_package'),
-            "path_to_urdf": LaunchConfiguration('path_to_urdf'),
-            "use_sim_time": 'true'
-        }.items(),
-        condition = IfCondition(LaunchConfiguration("rsp"))
-    ))
 
-    # gazebo launch
-    
 
-    ld.add_action(IncludeLaunchDescription(
-        PathJoinSubstitution([FindPackageShare('ros_gz_sim'), "launch", 'gz_sim.launch.py']),
-        # launch_arguments={ 'gz_args':PathJoinSubstitution([this_package_share, 'worlds', 'building_robot.sdf']) }.items()
-        launch_arguments={ 'gz_args':"empty.sdf", "on_exit_shutdown":'true'}.items() 
-    ))
-
-    # gazebo spawn robots
-        
-    ld.add_action(Node(package='ros_gz_sim', executable='create',
-                        arguments=['-topic', 'robot_description',
-                                   '-name', 'my_bot',
-                                   '-z', '0.1'],
-                        output='screen'))
 
     # gazebo bridgs
     ld.add_action(Node(
@@ -99,11 +55,55 @@ def generate_launch_description():
     ))
 
 
-    # add pointcloud to laserscan
-    ld.add_action(Node(
+
+# NODE DESCRIPTION
+    # RVIZ2
+    rviz2 = Node(
+        package= "rviz2",
+        executable="rviz2",
+        arguments=["use_sim_time:=true",'-d', LaunchConfiguration('rviz_config')],
+        output = "screen",
+        condition = IfCondition(LaunchConfiguration('rviz'))
+    )
+
+    # join state publisher
+    jsp = Node(
+        package="joint_state_publisher_gui",
+        executable="joint_state_publisher_gui",
+        condition = IfCondition(LaunchConfiguration("jsp"))
+    )
+
+    # robot state publisher 
+    rsp = IncludeLaunchDescription(
+        PathJoinSubstitution([this_package_share, 'launch', 'robot_state_publisher.launch.py']),
+        launch_arguments={
+            "urdf_package": LaunchConfiguration('urdf_package'),
+            "path_to_urdf": LaunchConfiguration('path_to_urdf'),
+            "use_sim_time": 'true'
+        }.items(),
+        condition = IfCondition(LaunchConfiguration("rsp"))
+    )
+
+    # gazebo launch
+
+    gz_sim = IncludeLaunchDescription(
+        PathJoinSubstitution([FindPackageShare('ros_gz_sim'), "launch", 'gz_sim.launch.py']),
+        # launch_arguments={ 'gz_args':PathJoinSubstitution([this_package_share, 'worlds', 'building_robot.sdf']) }.items()
+        launch_arguments={ 'gz_args':"empty.sdf", "on_exit_shutdown":'true'}.items() 
+    )
+
+    # gazebo spawn robots
+        
+    gz_spawn_robot = Node(package='ros_gz_sim', executable='create',
+                        arguments=['-topic', 'robot_description',
+                                   '-name', 'my_bot',
+                                   '-z', '0.1'],
+                        output='screen')
+    
+        # add pointcloud to laserscan
+    ponitcloud_to_laserscan = Node(
             package='pointcloud_to_laserscan', executable='pointcloud_to_laserscan_node',
-            remappings=[('cloud_in', "points"),
-                        ('scan', ['scanner', '/scan'])],
+            remappings=[('cloud_in', "points")],
             parameters=[{
                 # 'target_frame': 'base_link',
                 # 'transform_tolerance': 0.01,
@@ -120,7 +120,13 @@ def generate_launch_description():
                 'use_sim_time':True
             }],
             name='pointcloud_to_laserscan'
-        ))
+        )
 
+    ld.add_action(rviz2)
+    ld.add_action(jsp)
+    ld.add_action(rsp)
+    ld.add_action(gz_sim)
+    ld.add_action(gz_spawn_robot)
+    ld.add_action(ponitcloud_to_laserscan)
     return ld
 
