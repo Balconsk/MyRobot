@@ -6,6 +6,6 @@
   <xacro:include filename="material.xacro" />
   <xacro:include filename="my_robot_core.xacro"/>
   <xacro:include filename="gazebo_control.xacro"/>
-  <xacro:include filename="gazebo_depth_camera.xacro"/>
+  <xacro:include filename="gazebo_depth_camera.xacro"/>  
 
 </robot>
