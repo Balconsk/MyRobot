@@ -13,7 +13,7 @@ import os
 def generate_launch_description():
     
     # Package Directories
-    pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
+    pkg_ros_gz_sim = get_package_share_directory('gazebo_launch')
     pkg_ros_gz_rbot = get_package_share_directory('robot_brignup')
 
     # Parse robot description from xacro
@@ -36,10 +36,7 @@ def generate_launch_description():
     
     # Start Gazebo Sim
     gazebo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(pkg_ros_gz_sim, "launch", "gz_sim.launch.py")),
-        launch_arguments={
-            "gz_args" : '-r -v 4 empty.sdf'
-        }.items()
+        PythonLaunchDescriptionSource(os.path.join(pkg_ros_gz_sim, "launch", "building_gazebo_launch.py")),
     )
 
     # Spawn Robot in Gazebo   
@@ -51,9 +48,9 @@ def generate_launch_description():
             "-name", "auto_platform",
             "-allow_renaming", "true",
             "-z", "0.32",
-            "-x", "0.0",
-            "-y", "0.0",
-            "-Y", "0.0"
+            "-x", "2.8461",
+            "-y", "-1.6387",
+            "-Y", "1.5708"
         ],            
         output='screen',
     )
